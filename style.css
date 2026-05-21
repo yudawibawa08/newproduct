@@ -1,3 +1,6 @@
+/* ==========================================================================
+   1. BASE STYLES & VARIABLES
+   ========================================================================== */
 * {
     margin: 0;
     padding: 0;
@@ -26,7 +29,9 @@ body {
     line-height: 1.6;
 }
 
-/* Navigation */
+/* ==========================================================================
+   2. NAVIGATION HEADER (WITH IMAGE LOGO)
+   ========================================================================== */
 nav {
     position: fixed;
     top: 0;
@@ -43,12 +48,28 @@ nav {
 }
 
 .logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: white;
-    letter-spacing: 1px;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    text-shadow: none !important;
+}
+
+.nav-logo-container {
+    width: 120px;
+    height: auto;
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.nav-logo-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
+
+.nav-logo-container:hover {
+    transform: scale(1.05);
 }
 
 .nav-links {
@@ -101,7 +122,7 @@ nav {
     transform: translateY(-2px);
 }
 
-/* Scrolled nav state - solid earthy background */
+/* Scrolled Navigation State */
 nav.scrolled {
     background: rgba(245, 241, 232, 0.98);
     backdrop-filter: blur(10px);
@@ -109,9 +130,8 @@ nav.scrolled {
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
-nav.scrolled .logo {
-    color: var(--primary);
-    text-shadow: none;
+nav.scrolled .nav-logo-container {
+    width: 110px;
 }
 
 nav.scrolled .nav-links a {
@@ -133,7 +153,9 @@ nav.scrolled .cta-button:hover {
     color: var(--text-dark);
 }
 
-/* Hero Section */
+/* ==========================================================================
+   3. HERO SECTION
+   ========================================================================== */
 .hero {
     position: relative;
     height: 100vh;
@@ -252,7 +274,9 @@ nav.scrolled .cta-button:hover {
     }
 }
 
-/* Properties Section */
+/* ==========================================================================
+   4. PRODUCTS / PROPERTIES SECTION
+   ========================================================================== */
 #properties {
     padding: 5rem 5%;
     background: var(--light);
@@ -364,7 +388,9 @@ nav.scrolled .cta-button:hover {
     background: var(--secondary);
 }
 
-/* Amenities Section */
+/* ==========================================================================
+   5. AMENITIES / SPECIFICATIONS SECTION (WITH PNG ICONS)
+   ========================================================================== */
 #amenities {
     padding: 5rem 5%;
     background: white;
@@ -418,7 +444,9 @@ nav.scrolled .cta-button:hover {
     line-height: 1.5;
 }
 
-/* Contact Section */
+/* ==========================================================================
+   6. CONTACT SECTION
+   ========================================================================== */
 #contact {
     padding: 5rem 5%;
     background: var(--dark);
@@ -466,7 +494,9 @@ nav.scrolled .cta-button:hover {
     transform: translateY(-3px);
 }
 
-/* Floating WhatsApp Widget */
+/* ==========================================================================
+   7. FLOATING WHATSAPP WIDGET (WITH PNG ICON)
+   ========================================================================== */
 .whatsapp-widget {
     position: fixed;
     bottom: 2rem;
@@ -483,9 +513,6 @@ nav.scrolled .cta-button:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
-    font-size: 1.8rem;
-    text-decoration: none;
     box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
     transition: all 0.3s ease;
     border: none;
@@ -498,7 +525,7 @@ nav.scrolled .cta-button:hover {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    padding: 5px;
+    padding: 14px;
 }
 
 .whatsapp-btn:hover {
@@ -518,7 +545,9 @@ nav.scrolled .cta-button:hover {
     }
 }
 
-/* Footer Base Structure */
+/* ==========================================================================
+   8. FOOTER ALIGNED STRUCTURE (WITH PNG LOGO)
+   ========================================================================== */
 footer {
     background: var(--dark);
     color: white;
@@ -629,7 +658,9 @@ footer {
     color: #aaa;
 }
 
-/* Responsive Styles */
+/* ==========================================================================
+   9. RESPONSIVE MEDIA QUERIES (CLEANLY CLOSED)
+   ========================================================================== */
 @media (max-width: 768px) {
     .hero-content h1 {
         font-size: 2.5rem;
@@ -677,17 +708,16 @@ footer {
     .whatsapp-btn {
         width: 50px;
         height: 50px;
-        font-size: 1.5rem;
+    }
+
+    .whatsapp-btn img {
+        padding: 11px;
     }
 }
 
 @media (max-width: 480px) {
     nav {
         padding: 1rem 3%;
-    }
-
-    .logo {
-        font-size: 1.3rem;
     }
 
     .nav-links {
