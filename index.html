@@ -1,164 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bali Dhupa - Where Peace Begins</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  
-  <!-- Flaticon -->
-  <link rel="icon" type="image/png" href="./img/logo_crop.png" />
-  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bali Dhupa - Premium Balinese Incense</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <!-- Navigation -->
-  <nav>
-    <div class="logo">
-      <div class="nav-logo-container">
-        <img src="img/logo_text.png" alt="Bali Dhupa" class="nav-logo-img">
-      </div>
-    </div>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#properties">Products</a></li>
-      <li><a href="#amenities">The Craft</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-    <button class="cta-button" onclick="scrollToSection('properties')">Enter Serenity</button>
-  </nav>
 
-  <!-- Hero Section -->
-  <section class="hero" id="hero">
-    <video autoplay muted loop playsinline>
-      <source src="video/hero-bg.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <h1>Where Peace Begins</h1>
-      <p>Balinese Calm in Every Breath</p>
-      <button class="hero-button" onclick="scrollToSection('contact')">Discover the Collections</button>
-    </div>
-  </section>
-
-  <!-- Properties Section -->
-  <section id="properties">
-    <div class="section-header">
-      <h2>Our Products</h2>
-      <p>Find Your Calm</p>
-    </div>
-    <div class="properties-grid" id="propertiesGrid">
-      <!-- Properties will be populated by JavaScript -->
-    </div>
-  </section>
-
-  <!-- Amenities Section -->
-  <section id="amenities">
-    <div class="section-header">
-      <h2>The Craft</h2>
-      <p>From Nature to Your Serenity</p>
-    </div>
-    <div class="amenities-grid">
-      <div class="amenity-item">
-        <div class="amenity-icon"><img src="img/bamboo.png" alt="bamboo" loading="lazy"></div>
-        <h3>Selected Bamboo Sticks</h3>
-        <p>Made from high-quality bamboo that is naturally dried. These sticks are sturdy, produce minimal ash, and emit no
-        burnt-wood odor when lit.</p>
-      </div>
-      <div class="amenity-item">
-        <div class="amenity-icon"><img src="img/powder.png" alt="bamboo" loading="lazy"></div>
-        <h3>Spike Powder</h3>
-        <p>Functions as a natural binder without synthetic chemicals. This wood powder ensures a stable, even burn and keeps the
-        incense lit without overpowering the core aroma.</p>
-      </div>
-      <div class="amenity-item">
-        <div class="amenity-icon"><img src="img/oil.png" alt="bamboo" loading="lazy"></div>
-        <h3>Pure Essential Oils</h3>
-        <p>Pure oil extracts from flowers and plants, these oils absorb perfectly into the incense fibers, providing a clean, therapeutic, and respiratory-safe calming
-        effect.</p>
-      </div>
-      <div class="amenity-item">
-        <div class="amenity-icon"><img src="img/coconut.png" alt="bamboo" loading="lazy"></div>
-        <h3>Coconut Shell Charcoal</h3>
-        <p>Ensures a burn without thick black smoke. Coconut shell charcoal makes the incense smoke smoother, toxin-free, and safe
-        for indoor use or your meditation spaces.</p>
-      </div>
-      <div class="amenity-item">
-        <div class="amenity-icon"><img src="img/clock.png" alt="bamboo" loading="lazy"></div>
-        <h3>Burn Time</h3>
-        <p>45 to 60 minutes per stick, depending on your room's air circulation.</p>
-      </div>
-      <div class="amenity-item">
-        <div class="amenity-icon"><img src="img/natural.png" alt="bamboo" loading="lazy"></div>
-        <h3>Natural</h3>
-        <p>100% free from chemical dips and artificial colorants, making it safe for daily use.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contact Section -->
-  <section id="contact">
-    <h2>Find Your Peace</h2>
-    <p>Begin your journey to tranquility today</p>
-    <div class="contact-buttons">
-      <button class="contact-btn" onclick="openWhatsApp()">WhatsApp Inquiry</button>
-      <button class="contact-btn" onclick="sendEmail()">Email Us</button>
-      <button class="contact-btn" onclick="callNow()">Call Now</button>
-    </div>
-  </section>
-
-  <!-- Floating WhatsApp Widget -->
-  <div class="whatsapp-widget">
-    <button class="whatsapp-btn" onclick="openWhatsApp()" title="Chat on WhatsApp">
-      <img src="img/whatsapp.png" alt="WhatsApp" loading="lazy">
-    </button>
-  </div>
-
-  <!-- Footer -->
-  <footer id="footer">
-    <div class="footer-content">
-  
-      <div class="footer-section footer-brand">
-        <div class="footer-logo-container">
-          <img src="img/logo_crop.png" alt="Bali Dhupa Logo" loading="lazy">
+    <nav id="mainNav">
+        <div class="logo">
+            <div class="nav-logo-container">
+                <img src="img/logo_text.png" alt="Bali Dhupa" class="nav-logo-img">
+            </div>
         </div>
-      </div>
-  
-      <div class="footer-section">
-        <h4>Order</h4>
-        <ul class="footer-links">
-          <li><a href="#contact">Contact Us</a></li>
-          <li><a href="tel:+1234567890">+1 (234) 567-890</a></li>
-          <li><a href="mailto:admin@balidhupa.com">admin@balidhupa.com</a></li>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#properties" onclick="navigateToPage('storefront')">Products</a></li>
+            <li><a href="#amenities" onclick="navigateToPage('storefront')">The Craft</a></li>
+            <li><a href="#contact" onclick="navigateToPage('storefront')">Contact</a></li>
         </ul>
-      </div>
-  
-      <div class="footer-section">
-        <h4>Address</h4>
-        <p class="footer-address">
-          Klungkung<br>
-          Bali, Indonesia
-        </p>
-      </div>
-  
-      <div class="footer-section">
-        <h4>Follow Us</h4>
-        <div class="footer-socials">
-          <a href="https://facebook.com" target="_blank" rel="noopener" title="Facebook">f</a>
-          <a href="https://instagram.com" target="_blank" rel="noopener" title="Instagram">🅾</a>
-          <a href="https://wa.me/1234567890" target="_blank" rel="noopener" title="WhatsApp">💬</a>
+        <div class="nav-actions">
+            <button class="cart-toggle-btn" id="cartToggleBtn" onclick="toggleCartSidebar()">
+                <span class="cart-icon">🧺</span>
+                <span class="cart-badge" id="cartBadge">0</span>
+            </button>
+            <button class="cta-button" onclick="scrollToSection('properties')">Enter Serenity</button>
         </div>
-      </div>
-  
-    </div>
-  
-    <div class="footer-bottom">
-      <p>&copy; 2026 Bali Dhupa. All rights reserved. | NIB: 0220306832565</p>
-    </div>
-  </footer>
+    </nav>
 
-  <script defer src="mainFunction.js"></script>
+    <div id="storefrontView">
+        <section class="hero" id="hero">
+            <video autoplay muted loop playsinline>
+                <source src="video/hero-bg.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1>Where Peace Begins</h1>
+                <p>Balinese Calm in Every Breath</p>
+                <button class="hero-button" onclick="scrollToSection('properties')">Discover the Collections</button>
+            </div>
+        </section>
+
+        <section id="properties">
+            <div class="section-header">
+                <h2>Our Exclusive Collections</h2>
+                <p>Curated luxury natural incense for your perfect sensory escape</p>
+            </div>
+            <div class="properties-grid" id="propertiesGrid"></div>
+        </section>
+
+        <section id="amenities">
+            <div class="section-header">
+                <h2>The Craft</h2>
+                <p>From Nature to Your Serenity</p>
+            </div>
+            <div class="amenities-grid">
+                <div class="amenity-item">
+                    <div class="amenity-icon"><img src="img/bamboo.png" alt="bamboo" loading="lazy"></div>
+                    <h3>Selected Bamboo Sticks</h3>
+                    <p>Made from high-quality bamboo that is naturally dried. These sticks are sturdy, produce minimal ash, and
+                        emit no
+                        burnt-wood odor when lit.</p>
+                </div>
+                <div class="amenity-item">
+                    <div class="amenity-icon"><img src="img/powder.png" alt="bamboo" loading="lazy"></div>
+                    <h3>Spike Powder</h3>
+                    <p>Functions as a natural binder without synthetic chemicals. This wood powder ensures a stable, even burn
+                        and keeps the
+                        incense lit without overpowering the core aroma.</p>
+                </div>
+                <div class="amenity-item">
+                    <div class="amenity-icon"><img src="img/oil.png" alt="bamboo" loading="lazy"></div>
+                    <h3>Pure Essential Oils</h3>
+                    <p>Pure oil extracts from flowers and plants, these oils absorb perfectly into the incense fibers, providing
+                        a clean, therapeutic, and respiratory-safe calming
+                        effect.</p>
+                </div>
+                <div class="amenity-item">
+                    <div class="amenity-icon"><img src="img/coconut.png" alt="bamboo" loading="lazy"></div>
+                    <h3>Coconut Shell Charcoal</h3>
+                    <p>Ensures a burn without thick black smoke. Coconut shell charcoal makes the incense smoke smoother,
+                        toxin-free, and safe
+                        for indoor use or your meditation spaces.</p>
+                </div>
+                <div class="amenity-item">
+                    <div class="amenity-icon"><img src="img/clock.png" alt="bamboo" loading="lazy"></div>
+                    <h3>Burn Time</h3>
+                    <p>45 to 60 minutes per stick, depending on your room's air circulation.</p>
+                </div>
+                <div class="amenity-item">
+                    <div class="amenity-icon"><img src="img/natural.png" alt="bamboo" loading="lazy"></div>
+                    <h3>Natural</h3>
+                    <p>100% free from chemical dips and artificial colorants, making it safe for daily use.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2>Experience Balinese Calm</h2>
+            <p>Have questions about our blend or custom ordering options? Connect with us directly.</p>
+            <div class="contact-buttons">
+                <button class="contact-btn" onclick="window.open('https://wa.me/1234567890')">WhatsApp Inquiry</button>
+                <button class="contact-btn" onclick="window.open('mailto:admin@balidhupa.com')">Email Us</button>
+            </div>
+        </section>
+    </div>
+
+    <div class="spa-page-view hidden" id="pdpPageView"></div>
+    <div class="spa-page-view hidden" id="checkoutPageView"></div>
+
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-sidebar-header">
+            <h3>🧺 Your Cart</h3>
+            <button class="close-sidebar-btn" onclick="toggleCartSidebar()">✕</button>
+        </div>
+        <div class="cart-sidebar-items" id="cartSidebarItems"></div>
+        <div class="cart-sidebar-footer">
+            <div class="cart-subtotal">
+                <span>Subtotal:</span>
+                <span id="cartSubtotalText">$ 0.00</span>
+            </div>
+            <button class="checkout-now-btn" onclick="navigateToPage('checkout')">Proceed to Checkout</button>
+        </div>
+    </div>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleCartSidebar()"></div>
+
+    <div class="whatsapp-widget">
+        <button class="whatsapp-btn" onclick="window.open('https://wa.me/1234567890')" title="Chat on WhatsApp">
+            <img src="img/whatsapp.png" alt="WhatsApp" loading="lazy">
+        </button>
+    </div>
+
+    <footer id="footer">
+        <div class="footer-content">
+            <div class="footer-section footer-brand">
+                <div class="footer-logo-container">
+                    <img src="img/logo_crop.png" alt="Bali Dhupa Logo" loading="lazy">
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Order</h4>
+                <ul class="footer-links">
+                    <li><a href="#contact">Contact Us</a></li>
+                    <li><a href="tel:+1234567890">+1 (234) 567-890</a></li>
+                    <li><a href="mailto:admin@balidhupa.com">admin@balidhupa.com</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Address</h4>
+                <p class="footer-address">
+                    Klungkung<br>
+                    Bali, Indonesia
+                </p>
+            </div>
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="footer-socials">
+                    <a href="https://facebook.com" target="_blank" rel="noopener">f</a>
+                    <a href="https://instagram.com" target="_blank" rel="noopener">🅾</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Bali Dhupa. All rights reserved. | NIB: 0220306832565</p>
+        </div>
+    </footer>
+
+    <script src="mainFunction.js"></script>
 </body>
+
 </html>
