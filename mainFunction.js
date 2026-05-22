@@ -2,7 +2,7 @@
  * Bali Dhupa - Complete Dynamic E-commerce Core Engine Script
  */
 
-// 1. Database Produk Terpusat (Single Source of Truth) dengan Informasi Detail Lengkap
+// 1. Database Produk Terpusat (Single Source of Truth) dengan Informasi Detail Tambahan
 const BD_PRODUCTS_DB = [
     {
         id: "prod-01",
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initNavbarScrollEffect();
     renderStorefrontProducts();
     refreshCartUI();
-    
+
     // Daftarkan status awal halaman beranda ke dalam riwayat browser untuk back button Android
     if (!history.state) {
         history.replaceState({ page: 'storefront' }, "", "#home");
@@ -236,24 +236,18 @@ function toggleCartSidebar() {
     document.getElementById("sidebarOverlay").classList.toggle("open");
 }
 
-function openCartSidebar() {
-    document.getElementById("cartSidebar").classList.add("open");
-    document.getElementById("sidebarOverlay").classList.add("open");
-}
-
-function closeCartSidebar() {
+// 6. SPA Dynamic Router (Dengan Proteksi Tombol Back Android & Backspace Laptop)
+function navigateToPage(pageTarget, isPopState = false) {
+    // Tutup sidebar cart otomatis saat berpindah halaman
     document.getElementById("cartSidebar").classList.remove("open");
     document.getElementById("sidebarOverlay").classList.remove("open");
-}
-
-// 6. SPA Dynamic Router (Dengan Dukungan Tombol Back Fisik Android & Laptop)
-function navigateToPage(pageTarget, isPopState = false) {
-    closeCartSidebar();
     
+    // Sembunyikan semua kontainer tampilan halaman
     document.getElementById("storefrontView").classList.add("hidden");
     document.getElementById("pdpPageView").classList.add("hidden");
     document.getElementById("checkoutPageView").classList.add("hidden");
 
+    // Tampilkan halaman sesuai target
     if (pageTarget === 'storefront') {
         document.getElementById("storefrontView").classList.remove("hidden");
         document.body.style.overflow = "auto";
@@ -275,30 +269,24 @@ function navigateToPage(pageTarget, isPopState = false) {
     }
 }
 
-// 7. Render Halaman Detail Produk (PDP) dengan Kolom Tindakan Sticky Kontekstual
+// 7. Render Halaman Detail Produk (PDP) dengan Spesifikasi Lengkap
 function openProductDetailPage(productId) {
     const product = BD_PRODUCTS_DB.find(p => p.id === productId);
     if (!product) return;
 
     const pdpContainer = document.getElementById("pdpPageView");
     pdpContainer.innerHTML = `
-        <button class="back-to-store-btn" onclick="navigateToPage('storefront')" style="margin-bottom: 1.5rem;">← Back to Collections</button>
-        
-        <div class="pdp-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: flex-start; position: relative;">
-            
+        <button class="back-to-store-btn" onclick="navigateToPage('storefront')" style="margin-bottom: 1rem;">← Back to Collections</button>
+        <div class="pdp-container">
             <div class="pdp-gallery">
-                <img src="${product.image}" alt="${product.name}" style="width: 100%; height: auto; border-radius: 6px; object-fit: cover;">
+                <img src="${product.image}" alt="${product.name}">
             </div>
-            
-            <div class="pdp-details-info" style="display: flex; flex-direction: column; gap: 1.5rem; position: relative;">
+            <div class="pdp-details-info">
+                <h2>${product.name}</h2>
+                <div class="pdp-price">$ ${product.price.toFixed(2)}</div>
+                <p class="pdp-description">${product.description}</p>
                 
-                <div>
-                    <h2>${product.name}</h2>
-                    <div class="pdp-price">$ ${product.price.toFixed(2)}</div>
-                    <p class="pdp-description">${product.description}</p>
-                </div>
-                
-                <div class="pdp-specifications" style="padding: 1.25rem; background: rgba(139, 115, 85, 0.08); border-radius: 6px; border-left: 4px solid var(--primary);">
+                <div class="pdp-specifications" style="margin: 1.5rem 0; padding: 1.25rem; background: rgba(139, 115, 85, 0.08); border-radius: 6px; border-left: 4px solid var(--primary);">
                     <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 0.75rem; color: var(--dark); font-size: 1.1rem;">Product Specifications</h4>
                     <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; line-height: 1.5;">
                         <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);"><td style="padding: 0.5rem 0; font-weight: bold; width: 35%;">Composition:</td><td style="padding: 0.5rem 0; color: #444;">${product.materials}</td></tr>
@@ -308,29 +296,25 @@ function openProductDetailPage(productId) {
                     </table>
                 </div>
                 
-                <div class="pdp-sticky-purchase-card" style="position: -webkit-sticky; position: sticky; top: 120px; background: #fdfbf7; padding: 1.5rem; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); z-index: 10;">
-                    
-                    <div class="form-field-control" style="margin-bottom: 1.25rem;">
-                        <label style="display: block; font-weight: bold; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--dark);">Select Quantity</label>
-                        <select class="pdp-qty-select" id="pdpQtySelectField" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 4px; font-weight: bold; background: white;">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
-                    </div>
-                    
-                    <div class="pdp-actions-row" style="display: flex; flex-direction: column; gap: 0.75rem;">
-                        <button class="cta-button" style="width: 100%; text-align: center; margin: 0; padding: 0.85rem; font-weight: bold;" onclick="handlePdpAddToCart('${product.id}')">🛒 Add to Shopping Cart</button>
-                        <button class="checkout-now-btn" style="width: 100%; background: #2c2416; color: #ffffff; border: none; padding: 0.85rem; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.9rem; transition: background 0.3s;" onclick="handlePdpDirectCheckout('${product.id}')">🛍️ Buy It Now</button>
-                    </div>
-                    
+                <div class="form-field-control" style="margin-bottom: 2rem;">
+                    <label style="font-weight:bold;">Select Quantity</label>
+                    <select class="pdp-qty-select" id="pdpQtySelectField">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
                 </div>
-                
+
+                <div class="pdp-actions-row" style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button class="cta-button" style="flex: 1; text-align: center; margin: 0; padding: 0.85rem;" onclick="handlePdpAddToCart('${product.id}')">Add to Shopping Cart</button>
+                    <button class="checkout-now-btn" style="flex: 1; background: #2c2416; color: #ffffff; border: none; padding: 0.85rem; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.9rem;" onclick="handlePdpDirectCheckout('${product.id}')">Buy It Now</button>
+                </div>
             </div>
         </div>
     `;
+    
     navigateToPage('pdp');
 }
 
@@ -338,7 +322,8 @@ function handlePdpAddToCart(productId) {
     const qty = document.getElementById("pdpQtySelectField").value;
     executeAddToCart(productId, qty);
     navigateToPage('storefront');
-    openCartSidebar();
+    document.getElementById("cartSidebar").classList.add("open");
+    document.getElementById("sidebarOverlay").classList.add("open");
 }
 
 function handlePdpDirectCheckout(productId) {
@@ -347,7 +332,7 @@ function handlePdpDirectCheckout(productId) {
     navigateToPage('checkout');
 }
 
-// 8. Render Tampilan Formulir Lembar Checkout & Ekspedisi Zonal
+// 8. Render Tampilan Formulir Lembar Checkout & Ekspedisi
 function renderCheckoutFormView() {
     const view = document.getElementById("checkoutPageView");
     if (appCartState.length === 0) {
@@ -448,7 +433,7 @@ function updateShippingCost(itemSubtotal, totalItemsCount) {
     document.getElementById("checkoutGrandTotalText").innerText = `$ ${newGrandTotal.toFixed(2)}`;
 }
 
-// 10. Eksekusi Pembelian Akhir (Simulasi Selesai Belanja)
+// 10. Eksekusi Pembelian Akhir
 function executeOrderFinalization(event) {
     event.preventDefault();
     alert("Om Shanti Shanti Shanti Om. Matur Suksma! Your international order has been successfully locked and processed. Tracking details from Klungkung, Bali will be sent to your email.");
@@ -458,11 +443,13 @@ function executeOrderFinalization(event) {
     navigateToPage('storefront');
 }
 
-// 11. Event Listener Popstate untuk Menangkap Tombol Back Android & Laptop Browser
+// 11. Event Listener untuk Menangkap Aksi Back Fisik Android & Browser Laptop
 window.addEventListener("popstate", (event) => {
     if (event.state && event.state.page) {
+        // Jika ada riwayat halaman terdeteksi, arahkan visual SPA ke halaman tersebut
         navigateToPage(event.state.page, true);
     } else {
+        // Proteksi jika kehabisan riwayat, paksa visual kembali aman ke storefront
         navigateToPage('storefront', true);
     }
 });
