@@ -30,7 +30,7 @@ body {
 }
 
 /* ==========================================================================
-   2. NAVIGATION HEADER (WITH IMAGE LOGO)
+   2. NAVIGATION HEADER
    ========================================================================== */
 nav {
     position: fixed;
@@ -103,6 +103,12 @@ nav {
     width: 100%;
 }
 
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
 .cta-button {
     padding: 0.75rem 1.5rem;
     background: var(--secondary);
@@ -122,7 +128,7 @@ nav {
     transform: translateY(-2px);
 }
 
-/* Scrolled Navigation State */
+/* Scrolled Nav State */
 nav.scrolled {
     background: rgba(245, 241, 232, 0.98);
     backdrop-filter: blur(10px);
@@ -208,20 +214,6 @@ nav.scrolled .cta-button:hover {
     padding: 0;
 }
 
-.heading-video-bg {
-    position: absolute;
-    top: -20px;
-    left: -30px;
-    right: -30px;
-    bottom: -20px;
-    width: calc(100% + 60px);
-    height: calc(100% + 40px);
-    object-fit: cover;
-    border-radius: 8px;
-    z-index: -1;
-    opacity: 0.6;
-}
-
 .hero-content p {
     font-size: 1.3rem;
     font-weight: 300;
@@ -250,18 +242,6 @@ nav.scrolled .cta-button:hover {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-@keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -275,7 +255,7 @@ nav.scrolled .cta-button:hover {
 }
 
 /* ==========================================================================
-   4. PRODUCTS / PROPERTIES SECTION
+   4. PRODUCTS SECTION
    ========================================================================== */
 #properties {
     padding: 5rem 5%;
@@ -323,13 +303,7 @@ nav.scrolled .cta-button:hover {
 
 .property-image {
     width: 100%;
-    height: 200px;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 3rem;
+    height: 220px;
     overflow: hidden;
 }
 
@@ -337,7 +311,6 @@ nav.scrolled .cta-button:hover {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
 }
 
 .property-content {
@@ -385,11 +358,11 @@ nav.scrolled .cta-button:hover {
 }
 
 .property-btn:hover {
-    background: var(--secondary);
+    background: var(--dark);
 }
 
 /* ==========================================================================
-   5. AMENITIES / SPECIFICATIONS SECTION (WITH PNG ICONS)
+   5. AMENITIES / THE CRAFT SECTION
    ========================================================================== */
 #amenities {
     padding: 5rem 5%;
@@ -495,7 +468,7 @@ nav.scrolled .cta-button:hover {
 }
 
 /* ==========================================================================
-   7. FLOATING WHATSAPP WIDGET (WITH PNG ICON)
+   7. FLOATING WHATSAPP & CART ICON
    ========================================================================== */
 .whatsapp-widget {
     position: fixed;
@@ -525,12 +498,7 @@ nav.scrolled .cta-button:hover {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    padding: 14px;
-}
-
-.whatsapp-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+    padding: 4px;
 }
 
 @keyframes bounce {
@@ -545,8 +513,40 @@ nav.scrolled .cta-button:hover {
     }
 }
 
+.cart-toggle-btn {
+    background: transparent;
+    border: none;
+    position: relative;
+    cursor: pointer;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: var(--primary);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+nav.scrolled .cart-badge {
+    background: var(--dark);
+}
+
 /* ==========================================================================
-   8. FOOTER ALIGNED STRUCTURE (WITH PNG LOGO)
+   8. FOOTER COMPONENT
    ========================================================================== */
 footer {
     background: var(--dark);
@@ -639,15 +639,8 @@ footer {
     border-radius: 50%;
     color: white;
     text-decoration: none;
-    transition: all 0.3s ease;
     font-size: 1.2rem;
     font-weight: bold;
-}
-
-.footer-socials a:hover {
-    background: var(--secondary);
-    color: var(--text-dark);
-    transform: translateY(-3px);
 }
 
 .footer-bottom {
@@ -659,34 +652,301 @@ footer {
 }
 
 /* ==========================================================================
-   9. RESPONSIVE MEDIA QUERIES (CLEANLY CLOSED)
+   9. E-COMMERCE SIDEBAR & SPA VIEW STYLING
+   ========================================================================== */
+.cart-sidebar {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 100%;
+    max-width: 380px;
+    height: 100vh;
+    background: white;
+    z-index: 2000;
+    box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.cart-sidebar.open {
+    right: 0;
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1999;
+    display: none;
+}
+
+.sidebar-overlay.open {
+    display: block;
+}
+
+.cart-sidebar-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cart-sidebar-header h3 {
+    font-family: 'Playfair Display', serif;
+    color: var(--dark);
+}
+
+.close-sidebar-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.cart-sidebar-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+.cart-item-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+}
+
+.cart-item-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.cart-item-info {
+    flex: 1;
+}
+
+.cart-item-info h5 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    margin-bottom: 0.2rem;
+}
+
+.cart-item-price {
+    font-size: 0.85rem;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.remove-item-btn {
+    background: transparent;
+    border: none;
+    color: #cc0000;
+    cursor: pointer;
+}
+
+.cart-sidebar-footer {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border);
+    background: var(--light);
+}
+
+.cart-subtotal {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.checkout-now-btn {
+    width: 100%;
+    padding: 0.85rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* SPA Base Layout */
+.spa-page-view {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--light);
+    z-index: 1500;
+    overflow-y: auto;
+    padding: 8rem 5% 4rem 5%;
+}
+
+.spa-page-view.hidden {
+    display: none !important;
+}
+
+.back-to-store-btn {
+    background: transparent;
+    border: none;
+    color: var(--primary);
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 2rem;
+}
+
+/* PDP Custom Layout */
+.pdp-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    background: white;
+    padding: 3rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.pdp-gallery img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.pdp-details-info h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+}
+
+.pdp-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--secondary);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.pdp-description {
+    color: #555;
+    margin-bottom: 2rem;
+}
+
+.pdp-actions-row {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.pdp-qty-select {
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    width: 70px;
+}
+
+/* Checkout Layout */
+.checkout-container {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.checkout-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.checkout-card h3 {
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
+}
+
+.form-group-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-field-control {
+    margin-bottom: 1.25rem;
+}
+
+.form-field-control label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+}
+
+.form-field-control input,
+.form-field-control select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+}
+
+.order-summary-box {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    height: fit-content;
+}
+
+.summary-row-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.summary-row-line.grand-total {
+    border-bottom: none;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--primary);
+}
+
+/* ==========================================================================
+   10. RESPONSIVE MEDIA QUERIES
    ========================================================================== */
 @media (max-width: 768px) {
     .hero-content h1 {
         font-size: 2.5rem;
     }
 
-    .hero-content p {
-        font-size: 1rem;
-    }
-
-    .nav-links {
-        gap: 1rem;
-    }
-
-    .section-header h2 {
-        font-size: 1.8rem;
-    }
-
-    #properties,
-    #amenities,
-    #contact {
-        padding: 3rem 5%;
-    }
-
     .properties-grid,
     .amenities-grid {
         grid-template-columns: 1fr;
+    }
+
+    .pdp-container,
+    .checkout-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 1.5rem;
+    }
+
+    .pdp-gallery img {
+        height: 300px;
     }
 
     .footer-content {
@@ -699,70 +959,4 @@ footer {
     .footer-brand {
         align-items: center;
     }
-
-    .whatsapp-widget {
-        bottom: 1rem;
-        right: 1rem;
-    }
-
-    .whatsapp-btn {
-        width: 50px;
-        height: 50px;
-    }
-
-    .whatsapp-btn img {
-        padding: 11px;
-    }
 }
-
-@media (max-width: 480px) {
-    nav {
-        padding: 1rem 3%;
-    }
-
-    .nav-links {
-        display: none;
-    }
-
-    .nav-links.active {
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        top: 70px;
-        left: 0;
-        right: 0;
-        background: rgba(44, 36, 22, 0.95);
-        padding: 1rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    }
-
-    .nav-links.active a {
-        color: white;
-    }
-
-    .hero {
-        padding-top: 70px;
-    }
-
-    .hero-content h1 {
-        font-size: 1.8rem;
-    }
-
-    .hero-content p {
-        font-size: 0.9rem;
-    }
-
-    .cta-button {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.85rem;
-    }
-
-    .contact-buttons {
-        flex-direction: column;
-    }
-
-    .contact-btn {
-        min-width: auto;
-    }
-}
-
