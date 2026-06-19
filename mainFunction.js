@@ -2,15 +2,14 @@
  * Bali Dhupa - Complete Dynamic E-commerce Core Engine Script
  */
 
-// 1. Database Produk Terpusat (Single Source of Truth) dengan Informasi Detail Tambahan
+// 1. Database Produk Terpusat (Single Source of Truth) dengan Informasi Detail Lengkap
 const BD_PRODUCTS_DB = [
     {
         id: "prod-01",
         name: "Deva Dhupa Premium Censer",
         price: 25.00,
-        image: "img/insence.jpg",
+        image: "img/product/cendana.png",
         description: "Exquisitely hand-carved terracotta incense burner modeled after classic Balinese temple arches. Designed to disperse streams of soothing ritual smoke uniformly while elevating the interior aesthetics of your home sanctuary.",
-        // Informasi Tambahan Khusus PDP
         materials: "100% Premium Terracotta Clay, Hand-Carved",
         burnDuration: "Continuous distribution (Aroma stays up to 24 hours in closed room)",
         weight: "450 grams",
@@ -20,9 +19,8 @@ const BD_PRODUCTS_DB = [
         id: "prod-02",
         name: "Amrita Sacred Incense Sticks",
         price: 15.50,
-        image: "img/insence.jpg",
+        image: "img/product/cempaka.png",
         description: "Infused with raw sandalwood oil, majestic frangipani blossoms, and aged forest resins. Hand-rolled by traditional artisans in Klungkung, Bali, ensuring a slow, pure, and clean burn to invite supreme serenity.",
-        // Informasi Tambahan Khusus PDP
         materials: "Raw Sandalwood Oil, Majestic Frangipani Blossoms, Aged Forest Resins, Natural Bamboo Stick",
         burnDuration: "Approx. 60 - 75 minutes per stick",
         weight: "200 grams (approx. 50 sticks per pack)",
@@ -32,9 +30,8 @@ const BD_PRODUCTS_DB = [
         id: "prod-03",
         name: "Tirta Cleansing Oud Blend",
         price: 18.00,
-        image: "img/insence.jpg",
+        image: "img/product/melati.png",
         description: "A profound blend of rich agarwood essence paired with subtle hints of sweet honey and highland spices. Formulated specially to purify energy blocks, deepen focus, and anchor deep mindfulness during meditation sessions.",
-        // Informasi Tambahan Khusus PDP
         materials: "Premium Agarwood (Oud) Essence, Wild Forest Honey, Highland Spices, Coconut Shell Charcoal",
         burnDuration: "Approx. 45 - 60 minutes per stick",
         weight: "150 grams (approx. 40 sticks per pack)",
@@ -44,9 +41,8 @@ const BD_PRODUCTS_DB = [
         id: "prod-04",
         name: "Mantra Meditation Bundle",
         price: 22.00,
-        image: "img/insence.jpg",
+        image: "img/product/gaharu.png",
         description: "A professional collection of premium Balinese aromatic elements. Ideal for daily meditation, space purifications, or creating a deeply relaxing environment in your living area.",
-        // Informasi Tambahan Khusus PDP
         materials: "Combination of Amrita Sticks, Tirta Oud Blend, and a Mini Ceramic Holder",
         burnDuration: "Varies based on selected item inside the bundle",
         weight: "350 grams (Complete Bundle)",
@@ -70,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initNavbarScrollEffect();
     renderStorefrontProducts();
     refreshCartUI();
-
+    
     // Daftarkan status awal halaman beranda ke dalam riwayat browser untuk back button Android
     if (!history.state) {
         history.replaceState({ page: 'storefront' }, "", "#home");
@@ -164,7 +160,6 @@ function executeAddToCart(productId, qty) {
     refreshCartUI();
 }
 
-// Mengubah jumlah produk (+1 atau -1) langsung dari Cart
 function changeCartItemQty(productId, changeValue) {
     const targetItem = appCartState.find(item => item.id === productId);
     if (!targetItem) return;
@@ -179,7 +174,6 @@ function changeCartItemQty(productId, changeValue) {
     refreshCartUI();
 }
 
-// Menghapus produk secara total menggunakan tombol silang (✕)
 function clearCartItem(productId) {
     appCartState = appCartState.filter(item => item.id !== productId);
     saveCartState();
@@ -236,18 +230,25 @@ function toggleCartSidebar() {
     document.getElementById("sidebarOverlay").classList.toggle("open");
 }
 
-// 6. SPA Dynamic Router (Dengan Proteksi Tombol Back Android & Backspace Laptop)
-function navigateToPage(pageTarget, isPopState = false) {
-    // Tutup sidebar cart otomatis saat berpindah halaman
+function openCartSidebar() {
+    document.getElementById("cartSidebar").classList.add("open");
+    document.getElementById("sidebarOverlay").classList.add("open");
+}
+
+function closeCartSidebar() {
     document.getElementById("cartSidebar").classList.remove("open");
     document.getElementById("sidebarOverlay").classList.remove("open");
+}
+
+// 6. SPA Dynamic Router (Mendukung navigasi halaman interaktif)
+function navigateToPage(pageTarget, isPopState = false) {
+    closeCartSidebar();
     
-    // Sembunyikan semua kontainer tampilan halaman
     document.getElementById("storefrontView").classList.add("hidden");
     document.getElementById("pdpPageView").classList.add("hidden");
     document.getElementById("checkoutPageView").classList.add("hidden");
+    document.getElementById("thankyouPageView").classList.add("hidden");
 
-    // Tampilkan halaman sesuai target
     if (pageTarget === 'storefront') {
         document.getElementById("storefrontView").classList.remove("hidden");
         document.body.style.overflow = "auto";
@@ -260,34 +261,101 @@ function navigateToPage(pageTarget, isPopState = false) {
         document.getElementById("checkoutPageView").classList.remove("hidden");
         document.getElementById("checkoutPageView").scrollTop = 0;
         document.body.style.overflow = "auto";
+    } else if (pageTarget === 'thankyou') {
+        document.getElementById("thankyouPageView").classList.remove("hidden");
+        document.getElementById("thankyouPageView").scrollTop = 0;
+        document.body.style.overflow = "auto";
     }
 
-    // Masukkan log halaman baru ke riwayat browser jika BUKAN dipicu oleh tombol back fisik
     if (!isPopState) {
         const urlHash = pageTarget === 'storefront' ? "#home" : `#${pageTarget}`;
         history.pushState({ page: pageTarget }, "", urlHash);
     }
 }
 
-// 7. Render Halaman Detail Produk (PDP) dengan Spesifikasi Lengkap
+// 7. Render Halaman Detail Produk (PDP) dengan Spesifikasi Lengkap dan Responsif Mobile
 function openProductDetailPage(productId) {
     const product = BD_PRODUCTS_DB.find(p => p.id === productId);
     if (!product) return;
 
     const pdpContainer = document.getElementById("pdpPageView");
     pdpContainer.innerHTML = `
-        <button class="back-to-store-btn" onclick="navigateToPage('storefront')" style="margin-bottom: 1rem;">← Back to Collections</button>
-        <div class="pdp-container">
+        <!-- Tombol Kembali Atas -->
+        <button class="back-to-store-btn" onclick="navigateToPage('storefront')" style="margin-bottom: 1.5rem; background: transparent; border: none; color: var(--primary); font-weight: 600; cursor: pointer;">← Back to Collections</button>
+        
+        <!-- Tag Style Khusus untuk Menjamin Tampilan Mobile Persis Seperti Screenshot -->
+        <style>
+            .pdp-main-box {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 4rem;
+                align-items: flex-start;
+                position: relative;
+                background: white;
+                padding: 3rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
+            }
+            .pdp-sticky-container {
+                position: -webkit-sticky;
+                position: sticky;
+                top: 120px;
+                background: #fdfbf7;
+                padding: 1.5rem;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+                z-index: 10;
+            }
+            
+            /* Responsive Breakpoint untuk Tampilan Mobile (Maksimal 768px) */
+            @media (max-width: 768px) {
+                .pdp-main-box {
+                    grid-template-columns: 1fr !important;
+                    gap: 2rem !important;
+                    padding: 1.5rem !important;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+                    border-radius: 8px !important;
+                }
+                .pdp-gallery img {
+                    border-radius: 8px !important;
+                }
+                .pdp-details-info h2 {
+                    font-size: 1.8rem !important;
+                    margin-top: 0.5rem !important;
+                }
+                .pdp-sticky-container {
+                    position: static !important;
+                    width: 100% !important;
+                    padding: 1.25rem 0 0 0 !important;
+                    background: transparent !important;
+                    border: none !important;
+                    box-shadow: none !important;
+                }
+            }
+        </style>
+
+        <!-- Grid Kontainer Utama PDP -->
+        <div class="pdp-main-box">
+            
+            <!-- Sisi Kiri: Galeri Gambar Produk -->
             <div class="pdp-gallery">
-                <img src="${product.image}" alt="${product.name}">
+                <img src="${product.image}" alt="${product.name}" style="width: 100%; height: auto; border-radius: 6px; object-fit: cover;">
             </div>
-            <div class="pdp-details-info">
-                <h2>${product.name}</h2>
-                <div class="pdp-price">$ ${product.price.toFixed(2)}</div>
-                <p class="pdp-description">${product.description}</p>
+            
+            <!-- Sisi Kanan: Seluruh Kolom Deskripsi, Spesifikasi & Pembelian -->
+            <div class="pdp-details-info" style="display: flex; flex-direction: column; gap: 1.5rem; position: relative;">
                 
-                <div class="pdp-specifications" style="margin: 1.5rem 0; padding: 1.25rem; background: rgba(139, 115, 85, 0.08); border-radius: 6px; border-left: 4px solid var(--primary);">
-                    <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 0.75rem; color: var(--dark); font-size: 1.1rem;">Product Specifications</h4>
+                <!-- Identitas Produk -->
+                <div>
+                    <h2 style="font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--dark); margin-bottom: 0.5rem; font-weight: 700;">${product.name}</h2>
+                    <div class="pdp-price" style="font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--secondary); font-weight: 700; margin-bottom: 1rem;">$ ${product.price.toFixed(2)}</div>
+                    <p class="pdp-description" style="color: #555; line-height: 1.7;">${product.description}</p>
+                </div>
+                
+                <!-- Tabel Spesifikasi Detail Produk -->
+                <div class="pdp-specifications" style="padding: 1.25rem; background: rgba(139, 115, 85, 0.08); border-radius: 6px; border-left: 4px solid var(--primary);">
+                    <h4 style="font-family: 'Playfair Display', serif; margin-bottom: 0.75rem; color: var(--dark); font-size: 1.1rem; font-weight: 700;">Product Specifications</h4>
                     <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; line-height: 1.5;">
                         <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);"><td style="padding: 0.5rem 0; font-weight: bold; width: 35%;">Composition:</td><td style="padding: 0.5rem 0; color: #444;">${product.materials}</td></tr>
                         <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);"><td style="padding: 0.5rem 0; font-weight: bold;">Burn Duration:</td><td style="padding: 0.5rem 0; color: #444;">${product.burnDuration}</td></tr>
@@ -296,43 +364,49 @@ function openProductDetailPage(productId) {
                     </table>
                 </div>
                 
-                <div class="form-field-control" style="margin-bottom: 2rem;">
-                    <label style="font-weight:bold;">Select Quantity</label>
-                    <select class="pdp-qty-select" id="pdpQtySelectField">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
+                <!-- Kotak Pembelian (Kuantitas dan Tombol Aksi) -->
+                <div class="pdp-sticky-container">
+                    <div class="form-field-control" style="margin-bottom: 1.25rem;">
+                        <label style="display: block; font-weight: bold; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--dark);">Quantity</label>
+                        <div class="shopee-qty-selector" style="display: flex; align-items: center; border: 1px solid var(--border); border-radius: 4px; width: fit-content; background: white; overflow: hidden;">
+                            <button type="button" onclick="adjustPdpQty(-1)" style="width: 36px; height: 36px; background: #fafafa; border: none; cursor: pointer; font-size: 1.2rem; font-weight: bold; color: #555; display: flex; align-items: center; justify-content: center;">-</button>
+                            <input type="text" id="pdpQtySelectField" value="1" 
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value === '0') this.value = '1';" 
+                                   onblur="if(this.value === '') this.value = '1';"
+                                   style="width: 60px; height: 36px; border-top: none; border-bottom: none; border-left: 1px solid var(--border); border-right: 1px solid var(--border); text-align: center; font-weight: bold; font-size: 0.95rem; outline: none; padding: 0;">
+                            <button type="button" onclick="adjustPdpQty(1)" style="width: 36px; height: 36px; background: #fafafa; border: none; cursor: pointer; font-size: 1.2rem; font-weight: bold; color: #555; display: flex; align-items: center; justify-content: center;">+</button>
+                        </div>
+                    </div>
+                    
+                    <div class="pdp-actions-row" style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                        <button class="cta-button" style="flex: 1; text-align: center; margin: 0; padding: 0.85rem; font-weight: bold;" onclick="handlePdpAddToCart('${product.id}')">Add to Shopping Cart</button>
+                        <button class="checkout-now-btn" style="flex: 1; background: #2c2416; color: #ffffff; border: none; padding: 0.85rem; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.9rem;" onclick="handlePdpDirectCheckout('${product.id}')">Buy It Now</button>
+                    </div>     
                 </div>
-
-                <div class="pdp-actions-row" style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-                    <button class="cta-button" style="flex: 1; text-align: center; margin: 0; padding: 0.85rem;" onclick="handlePdpAddToCart('${product.id}')">Add to Shopping Cart</button>
-                    <button class="checkout-now-btn" style="flex: 1; background: #2c2416; color: #ffffff; border: none; padding: 0.85rem; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.9rem;" onclick="handlePdpDirectCheckout('${product.id}')">Buy It Now</button>
-                </div>
+                
             </div>
         </div>
     `;
-    
     navigateToPage('pdp');
+}
+
+function adjustPdpQty(changeValue) {
+    const qtyInput = document.getElementById("pdpQtySelectField");
+    if (!qtyInput) return;
+    let currentQty = parseInt(qtyInput.value) || 1;
+    currentQty += changeValue;
+    if (currentQty < 1) currentQty = 1;
+    qtyInput.value = currentQty;
 }
 
 function handlePdpAddToCart(productId) {
     const qty = document.getElementById("pdpQtySelectField").value;
     executeAddToCart(productId, qty);
     navigateToPage('storefront');
-    document.getElementById("cartSidebar").classList.add("open");
-    document.getElementById("sidebarOverlay").classList.add("open");
+    openCartSidebar();
 }
 
-function handlePdpDirectCheckout(productId) {
-    const qty = document.getElementById("pdpQtySelectField").value;
-    executeAddToCart(productId, qty);
-    navigateToPage('checkout');
-}
-
-// 8. Render Tampilan Formulir Lembar Checkout & Ekspedisi
+// 8. Render Tampilan Formulir Lembar Checkout & Ekspedisi Zonal
 function renderCheckoutFormView() {
     const view = document.getElementById("checkoutPageView");
     if (appCartState.length === 0) {
@@ -349,6 +423,7 @@ function renderCheckoutFormView() {
     let summaryItemsHtml = "";
     let itemSubtotal = 0;
     let totalItemsCount = 0;
+    let rawItemsTextText = "";
 
     appCartState.forEach(item => {
         itemSubtotal += (item.price * item.qty);
@@ -359,6 +434,7 @@ function renderCheckoutFormView() {
                 <span>$ ${(item.price * item.qty).toFixed(2)}</span>
             </div>
         `;
+        rawItemsTextText += `${item.name} (Qty: ${item.qty}, Price: $${(item.price * item.qty).toFixed(2)}) | `;
     });
 
     const defaultZone = SHIPPING_ZONES['id'];
@@ -371,16 +447,22 @@ function renderCheckoutFormView() {
             <div class="checkout-card">
                 <h3>Delivery Destination Address</h3>
                 <p style="font-size:0.85rem; color:#666; margin-bottom:1.5rem;">Dispatching from: <strong>Klungkung, Bali, Indonesia</strong></p>
+                
                 <form id="purchaseSubmitForm" onsubmit="executeOrderFinalization(event)">
+                    <input type="hidden" name="Ordered Items List" value="${rawItemsTextText}">
+                    <input type="hidden" name="Cart Items Subtotal" value="$ ${itemSubtotal.toFixed(2)}">
+                    <input type="hidden" id="hiddenShippingCost" name="Shipping Fee Estimate" value="$ ${initialShippingCost.toFixed(2)}">
+                    <input type="hidden" id="hiddenGrandTotal" name="Grand Total Invoice" value="$ ${initialGrandTotal.toFixed(2)}">
+
                     <div class="form-group-row">
-                        <div class="form-field-control"><label>First Name</label><input type="text" required></div>
-                        <div class="form-field-control"><label>Last Name</label><input type="text" required></div>
+                        <div class="form-field-control"><label>First Name</label><input type="text" name="First Name" required></div>
+                        <div class="form-field-control"><label>Last Name</label><input type="text" name="Last Name" required></div>
                     </div>
-                    <div class="form-field-control"><label>Email Address</label><input type="email" required></div>
+                    <div class="form-field-control"><label>Email Address</label><input type="email" name="Email Address" required></div>
                     
                     <div class="form-field-control">
                         <label>Destination Country</label>
-                        <select id="checkoutCountrySelect" onchange="updateShippingCost(${itemSubtotal}, ${totalItemsCount})" required>
+                        <select id="checkoutCountrySelect" name="Destination Country" onchange="updateShippingCost(${itemSubtotal}, ${totalItemsCount})" required>
                             <option value="id">Indonesia</option>
                             <option value="sg">Singapore</option>
                             <option value="au">Australia</option>
@@ -388,20 +470,20 @@ function renderCheckoutFormView() {
                         </select>
                     </div>
 
-                    <div class="form-field-control"><label>Full Shipping Address</label><input type="text" placeholder="Street Name, Building/Unit No." required></div>
+                    <div class="form-field-control"><label>Full Shipping Address</label><input type="text" name="Full Shipping Address" placeholder="Street Name, Building/Unit No." required></div>
                     <div class="form-group-row">
-                        <div class="form-field-control"><label>City / State</label><input type="text" required></div>
-                        <div class="form-field-control"><label>Postal Code</label><input type="text" required></div>
+                        <div class="form-field-control"><label>City / State</label><input type="text" name="City or State" required></div>
+                        <div class="form-field-control"><label>Postal Code</label><input type="text" name="Postal Code" required></div>
                     </div>
                     <div class="form-field-control">
                         <label>Secure Payment Option</label>
-                        <select required>
+                        <select name="Secure Payment Option" required>
                             <option value="qris">Instant Global QRIS / Credit Card</option>
                             <option value="paypal">PayPal Secure Account</option>
                             <option value="transfer">International Bank Wire Transfer</option>
                         </select>
                     </div>
-                    <button type="submit" class="cta-button" style="width:100%; text-align:center; margin-top:1.5rem; padding:1rem;">Complete Secure Purchase</button>
+                    <button type="submit" id="submitOrderBtn" class="cta-button" style="width:100%; text-align:center; margin-top:1.5rem; padding:1rem;">Complete Secure Purchase</button>
                 </form>
             </div>
             <div class="order-summary-box">
@@ -431,25 +513,161 @@ function updateShippingCost(itemSubtotal, totalItemsCount) {
     document.getElementById("shippingZoneMethod").innerText = `Via ${selectedZone.name}`;
     document.getElementById("checkoutShippingCostText").innerText = `$ ${newShippingCost.toFixed(2)}`;
     document.getElementById("checkoutGrandTotalText").innerText = `$ ${newGrandTotal.toFixed(2)}`;
+
+    if(document.getElementById("hiddenShippingCost")) document.getElementById("hiddenShippingCost").value = `$ ${newShippingCost.toFixed(2)}`;
+    if(document.getElementById("hiddenGrandTotal")) document.getElementById("hiddenGrandTotal").value = `$ ${newGrandTotal.toFixed(2)}`;
 }
 
-// 10. Eksekusi Pembelian Akhir
+function handlePdpDirectCheckout(productId) {
+    const qty = document.getElementById("pdpQtySelectField").value;
+    executeAddToCart(productId, qty);
+    navigateToPage('checkout');
+}
+
+// 10. Eksekusi Pembelian Akhir (Kirim Formulir Otomatis ke Email via Formspree Backend-less)
 function executeOrderFinalization(event) {
     event.preventDefault();
-    alert("Om Shanti Shanti Shanti Om. Matur Suksma! Your international order has been successfully locked and processed. Tracking details from Klungkung, Bali will be sent to your email.");
-    appCartState = [];
-    saveCartState();
-    refreshCartUI();
-    navigateToPage('storefront');
+    
+    const formElement = document.getElementById("purchaseSubmitForm");
+    const submitBtn = document.getElementById("submitOrderBtn");
+    
+    if (!formElement) return;
+    
+    if (submitBtn) {
+        submitBtn.innerText = "Processing Order...";
+        submitBtn.disabled = true;
+    }
+
+    // 1. Ambil data negara dan kalkulasi ulang biaya untuk validasi struk halaman terima kasih
+    const countryKey = document.getElementById("checkoutCountrySelect").value;
+    const selectedZone = SHIPPING_ZONES[countryKey] || SHIPPING_ZONES['id'];
+    
+    let itemSubtotal = 0;
+    let totalItemsCount = 0;
+    
+    appCartState.forEach(item => {
+        itemSubtotal += (item.price * item.qty);
+        totalItemsCount += item.qty;
+    });
+    
+    const finalShippingCost = selectedZone.baseRate + (selectedZone.ratePerItem * totalItemsCount);
+    const finalGrandTotal = itemSubtotal + finalShippingCost;
+
+    // 2. Simpan salinan data keranjang ke dalam memori lokal sebelum data dihapus
+    const receiptCartItems = [...appCartState];
+
+    const formDataPayload = new FormData(formElement);
+
+    // Tautan Endpoint Unik Formspree Anda
+    const formspreeEndpointUrl = "https://formspree.io/f/xrednobr"; 
+
+    fetch(formspreeEndpointUrl, {
+        method: "POST",
+        body: formDataPayload,
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            // Render detail rincian belanja ke kontainer HTML halaman terima kasih
+            renderThankYouReceiptView(receiptCartItems, itemSubtotal, finalShippingCost, finalGrandTotal, selectedZone.name);
+
+            // Kosongkan keranjang belanja setelah data terkirim ke email
+            appCartState = [];
+            saveCartState();
+            refreshCartUI();
+            
+            // Alihkan halaman ke Thank You Page
+            navigateToPage('thankyou');
+        } else {
+            alert("Oops! There was a problem submitting your order. Please try again.");
+            if (submitBtn) {
+                submitBtn.innerText = "Complete Secure Purchase";
+                submitBtn.disabled = false;
+            }
+        }
+    })
+    .catch(error => {
+        alert("Connection error. Please check your internet network.");
+        if (submitBtn) {
+            submitBtn.innerText = "Complete Secure Purchase";
+            submitBtn.disabled = false;
+        }
+    });
 }
 
-// 11. Event Listener untuk Menangkap Aksi Back Fisik Android & Browser Laptop
+// FUNGSI BARU: Merender nota pembelian lengkap secara dinamis di halaman Thank You
+function renderThankYouReceiptView(items, subtotal, shipping, grandTotal, shippingName) {
+    const thankyouContainer = document.getElementById("thankyouPageView");
+    if (!thankyouContainer) return;
+
+    let itemsRowsHtml = "";
+    items.forEach(item => {
+        itemsRowsHtml += `
+            <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                <td style="padding: 0.75rem 0; text-align: left; font-size: 0.9rem;">
+                    <strong>${item.name}</strong><br>
+                    <span style="color: #666; font-size: 0.8rem;">$ ${item.price.toFixed(2)} x ${item.qty}</span>
+                </td>
+                <td style="padding: 0.75rem 0; text-align: right; font-weight: bold; font-size: 0.9rem; color: var(--dark);">
+                    $ ${(item.price * item.qty).toFixed(2)}
+                </td>
+            </tr>
+        `;
+    });
+
+    thankyouContainer.innerHTML = `
+        <div style="text-align: center; max-width: 600px; margin: 4rem auto; background: white; padding: 3rem; border-radius: 8px; box-shadow: 0 4px 25px rgba(0,0,0,0.05);">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🙏</div>
+            <h2 style="font-family: 'Playfair Display', serif; color: var(--dark); margin-bottom: 1rem; font-size: 2.2rem;">Matur Suksma</h2>
+            <p style="color: #555; line-height: 1.8; margin-bottom: 2rem;">
+                Om Shanti Shanti Shanti Om.<br>
+                Your international order has been successfully locked and processed. We are preparing your sensory escape package directly from Klungkung, Bali.
+            </p>
+
+            <div style="border: 1px solid var(--border); border-radius: 6px; padding: 1.5rem; margin-bottom: 2rem; background: #fdfbf7;">
+                <h4 style="font-family: 'Playfair Display', serif; text-align: left; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; color: var(--dark); font-size: 1.1rem;">
+                    Order Receipt Summary
+                </h4>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 1rem;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--border); font-size: 0.8rem; color: #666; text-transform: uppercase;">
+                            <th style="padding-bottom: 0.5rem; text-align: left;">Product Details</th>
+                            <th style="padding-bottom: 0.5rem; text-align: right;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${itemsRowsHtml}
+                    </tbody>
+                </table>
+                
+                <div style="display: flex; justify-content: space-between; padding: 0.4rem 0; font-size: 0.9rem; color: #555;">
+                    <span>Items Subtotal:</span>
+                    <span>$ ${subtotal.toFixed(2)}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 0.4rem 0; font-size: 0.9rem; color: #555; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.75rem;">
+                    <span style="text-align: left;">Shipping (${shippingName}):</span>
+                    <span>$ ${shipping.toFixed(2)}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding-top: 1rem; font-weight: bold; font-size: 1.2rem; color: var(--primary);">
+                    <span>Grand Total:</span>
+                    <span>$ ${grandTotal.toFixed(2)}</span>
+                </div>
+            </div>
+
+            <button class="cta-button" onclick="navigateToPage('storefront')" style="padding: 0.85rem 2.5rem; width: 100%;">
+                Back to Sanctuary Store
+            </button>
+        </div>
+    `;
+}
+
+// 11. Event Listener Popstate untuk Menangkap Tombol Back Android & Laptop Browser
 window.addEventListener("popstate", (event) => {
     if (event.state && event.state.page) {
-        // Jika ada riwayat halaman terdeteksi, arahkan visual SPA ke halaman tersebut
         navigateToPage(event.state.page, true);
     } else {
-        // Proteksi jika kehabisan riwayat, paksa visual kembali aman ke storefront
         navigateToPage('storefront', true);
     }
 });
